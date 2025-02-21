@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Navbar from "@/components/Navbar";
+import TypingHeader from "@/components/TypingHeader";
 import Rounded from "@/constants/RoundedButtons";
 import OrderForm from "@/components/OrderForm";
 import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 import Copyright from "@/components/Copyright";
+
 
 export default function Home() {
   const artworks = [
@@ -82,19 +84,18 @@ export default function Home() {
   return (
     <main>
       <Navbar />
-      <section className="w-full lg:min-h-screen bg-white md:px-0 lg:px-[60px] py-12 lg:mt-[120px] mt-[114px]">
+      <section id="home" className="w-full lg:min-h-screen bg-white md:px-0 lg:px-[60px] py-12 lg:mt-[120px] mt-[114px]">
         <div className="max-w-7xl mx-auto">
           <div className="gap-8 items-center">
             <div className="px-4 lg:px-0">
-              <h1 className="text-4xl md:text-5xl lg:text-[56.89px] font-bold text-[#1E0734] leading-tight">
-                Art without Limits,
-                <br />
-                <span>Fully Customized for You.</span>
-              </h1>
+              <div className="h-10"><TypingHeader /></div>
+
               <div className="hidden lg:flex justify-between items-center pt-10">
-                <Rounded>
-                  <p>Get Custom Art</p>
-                </Rounded>
+                <Link href="/orderform">
+                  <Rounded>
+                    <p>Get Custom Art</p>
+                  </Rounded>
+                </Link>
                 <p className="text-[#757575] text-lg font-semibold">
                   Commission a masterpiece from <br /> our talented artists in just a few steps.
                 </p>
@@ -180,7 +181,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="container mx-auto px-4 py-16 max-w-6xl">
+      <section id="howitworks" className="container mx-auto px-4 py-16 max-w-6xl">
         <div className="flex justify-between lg:gap-[50.67px] md:gap-[30px] items-center md:flex-row flex-col">
           <div className="relative lg:w-[437px]">
             <div className="bg-transparent inline-block">
@@ -218,7 +219,9 @@ export default function Home() {
         <h2 className="text-2xl font-bold text-[#1E0734]">Order Form</h2>
       </div>
       <OrderForm /> */}
-      <FAQSection />
+      <section id="faqs">
+        <FAQSection />
+      </section>
       <section style={{ background: "linear-gradient(180deg, #1E0734 0%, rgba(30, 7, 52, 0) 100%)" }} className="w-full py-16 relative">
         <div className="flex flex-col items-center pt-[200px] px-4">
           <div className="contactCurve">

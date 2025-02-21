@@ -8,11 +8,19 @@ import gsap from 'gsap';
 interface RoundedButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   backgroundColor?: string;
+  hoverColor?: string;
+  className?: string;
+  disabled?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export default function RoundedButton({ 
   children, 
-  backgroundColor = "#455CE9", 
+  backgroundColor = "#455CE9",
+  hoverColor = "#1E0634",
+  className = "",
+  disabled = false,
+  onClick,
   ...attributes 
 }: RoundedButtonProps) {
 
@@ -28,28 +36,43 @@ export default function RoundedButton({
   }, [])
 
   const manageMouseEnter = () => {
+    if (disabled) return;
     if (timeoutId) clearTimeout(timeoutId)
     timeline.current?.tweenFromTo('enter', 'exit');
   }
 
   const manageMouseLeave = () => {
+    if (disabled) return;
     timeoutId = setTimeout(() => {
       timeline.current?.play();
     }, 300)
   }
 
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (disabled || !onClick) return;
+    onClick(event);
+  }
+
   return (
     <div 
-      className={styles.roundedButton} 
-      style={{ overflow: "hidden" }} 
+      className={`${styles.roundedButton} ${disabled ? styles.disabled : ''} ${className}`}
+      style={{ 
+        backgroundColor, 
+        overflow: "hidden",
+        opacity: disabled ? 0.5 : 1,
+        cursor: disabled ? 'not-allowed' : 'pointer'
+      }} 
       onMouseEnter={manageMouseEnter} 
-      onMouseLeave={manageMouseLeave} 
+      onMouseLeave={manageMouseLeave}
+      onClick={handleClick}
+      role="button"
+      tabIndex={disabled ? -1 : 0}
       {...attributes}
     >
       {children}
       <div 
         ref={circle} 
-        style={{ backgroundColor: '#9D5FED' }} 
+        style={{ backgroundColor: hoverColor }} 
         className={styles.circle}
       ></div>
     </div>

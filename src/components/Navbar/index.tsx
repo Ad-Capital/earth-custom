@@ -18,9 +18,9 @@ interface NavLinkProps {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { href: '/', label: 'Home' },
+  { href: '#home', label: 'Home' },
   { href: '#howitworks', label: 'How it works', isExternal: true },
-  { href: '#pricing', label: 'Pricing' },
+  { href: '/pricing', label: 'Pricing' },
   { href: '#faqs', label: 'FAQs' },
   { href: '/contact', label: 'Contact', isExternal: true },
 ];
@@ -65,28 +65,25 @@ const NavLink: React.FC<NavLinkProps> = ({
 
 const HamburgerButton = ({ isOpen, onClick, className = "" }: { isOpen: boolean; onClick: () => void; className?: string }) => (
   <button
-    className={`lg:hidden w-8 h-8 relative focus:outline-none ${className}`}
+    className={`lg:hidden flex justify-center items-center w-8 h-8 relative focus:outline-none ${className}`}
     onClick={onClick}
     aria-expanded={isOpen}
     aria-controls="mobile-menu"
     aria-label={isOpen ? 'Close menu' : 'Open menu'}
   >
     <span className="sr-only">{isOpen ? 'Close menu' : 'Open menu'}</span>
-    <div className="absolute w-6 transform -left-1 top-4">
+    <div className="relative flex justify-center items-center w-full h-full">
       <span
-        className={`absolute h-0.5 w-6 transform transition duration-300 ease-in-out ${isOpen ? 'rotate-45 delay-200' : 'rotate-0'
-          }`}
-        style={{ backgroundColor: '#1E0734' }}
+        className={`absolute h-0.5 w-6 bg-[#1E0734] transform transition duration-300 ease-in-out origin-center
+            ${isOpen ? 'rotate-45' : 'translate-y-[-8px]'}`}
       />
       <span
-        className={`absolute h-0.5 transform transition-all duration-200 ease-in-out ${isOpen ? 'w-0 opacity-50' : 'w-6 opacity-100 delay-200'
-          }`}
-        style={{ backgroundColor: '#1E0734', top: '8px' }}
+        className={`absolute h-0.5 w-6 bg-[#1E0734] transform transition-all duration-200 ease-in-out
+            ${isOpen ? 'opacity-0' : 'opacity-100'}`}
       />
       <span
-        className={`absolute h-0.5 w-6 transform transition duration-300 ease-in-out ${isOpen ? '-rotate-45 delay-200' : 'rotate-0'
-          }`}
-        style={{ backgroundColor: '#1E0734', top: '16px' }}
+        className={`absolute h-0.5 w-6 bg-[#1E0734] transform transition duration-300 ease-in-out origin-center
+            ${isOpen ? '-rotate-45' : 'translate-y-[8px]'}`}
       />
     </div>
   </button>
@@ -152,9 +149,12 @@ const Navbar: React.FC = () => {
         </div>
 
         <div className="hidden lg:flex">
-          <RoundedButton>
-            <p>Order Now</p>
-          </RoundedButton>
+          <Link href='/orderform'>
+            <RoundedButton>
+              <p>Order Now</p>
+            </RoundedButton>
+          </Link>
+
         </div>
 
         <div className="lg:hidden relative z-50">
@@ -182,13 +182,13 @@ const Navbar: React.FC = () => {
                   height={60}
                 />
               </Link>
-              <div className="relative z-50" style={{ width: '32px', height: '32px' }}>
+              {/* <div className="relative z-50" style={{ width: '32px', height: '32px' }}>
                 <HamburgerButton
                   isOpen={true}
                   onClick={toggleMobileMenu}
                   className="absolute top-0 right-0"
                 />
-              </div>
+              </div> */}
             </div>
 
             <div className="flex flex-col items-center justify-center h-full gap-8 -mt-20 text-[#1E0734]">
@@ -215,9 +215,11 @@ const Navbar: React.FC = () => {
                   : 'translate-y-8 opacity-0'
                 }
               `}>
-                <RoundedButton>
-                  <p className="font-bold">Order Now</p>
-                </RoundedButton>
+                <Link href='/orderform'>
+                  <RoundedButton>
+                    <p className="font-bold">Order Now</p>
+                  </RoundedButton>
+                </Link>
               </div>
             </div>
           </div>
