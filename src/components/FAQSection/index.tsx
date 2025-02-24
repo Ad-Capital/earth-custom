@@ -8,7 +8,7 @@ interface FAQItem {
 
 const faqs: FAQItem[] = [
     {
-        question: "How do I communicate with the artist?",
+        question: "What if I'm not sure what I want?",
         answer: [
             "No worries! We understand that commissioning custom art can feel overwhelming. That’s why we’ve made it easy for you.",
             "Simply share your ideas, preferences, or even a rough sketch of what you’re envisioning, and our team will work with you to refine your concept.",

@@ -175,7 +175,7 @@ const ArtworkDetails: React.FC<ArtworkDetailsProps> = ({ formData, onChange, onI
           <SelectValue placeholder="Select artwork type" />
         </SelectTrigger>
         <SelectContent>
-          {["Painting", "Sculpture", "Digital Art", "Mixed Media"].map((type) => (
+          {["Painting", "Drawing", "Digital Art", "Mixed Media"].map((type) => (
             <SelectItem key={type} value={type.toLowerCase()}>
               {type}
             </SelectItem>

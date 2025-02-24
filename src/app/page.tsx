@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import TypingHeader from "@/components/TypingHeader";
 import Rounded from "@/constants/RoundedButtons";
 import OrderForm from "@/components/OrderForm";
+import ArtworkCarousel from '@/components/ArtworkCarousel';
 import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 import Copyright from "@/components/Copyright";
@@ -215,6 +216,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <div className="py-16">
+        <h1 className="text-2xl font-bold text-[#1E0734] mb-8 mx-auto px-4 max-w-6xl">Featured Artworks</h1>
+        <ArtworkCarousel />
+      </div>
       {/* <div className="container mx-auto px-4 pt-16 pb-10 max-w-6xl">
         <h2 className="text-2xl font-bold text-[#1E0734]">Order Form</h2>
       </div>
