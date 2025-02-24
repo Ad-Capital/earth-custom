@@ -36,10 +36,8 @@ const ArtworkCarousel: React.FC<ArtworkCarouselProps> = ({
   const lastTimestamp = useRef<number | null>(null);
   const transitionRef = useRef(true);
 
-  // Fixed scrollDirection instead of changing based on page scroll
   const scrollDirection = direction === 'left' ? -1 : 1;
 
-  // Sample artworks data - use this if no artworks are provided
   const sampleArtworks: Artwork[] = [
     { id: 1, src: '/images/portfolio/1.jpg', title: 'Eyo Eko', artist: 'Shally Oluwa' },
     { id: 2, src: '/images/portfolio/2.jpg', title: 'This is Beautiful world', artist: 'Shally Oluwa' },
@@ -51,7 +49,6 @@ const ArtworkCarousel: React.FC<ArtworkCarouselProps> = ({
     { id: 8, src: '/images/portfolio/8.jpg', title: 'Water Lilies', artist: 'Silver Ona' },
   ];
 
-  // Use provided artworks or fallback to sample data
   const displayArtworks = artworks.length > 0 ? artworks : sampleArtworks;
 
   // Clone the first few items to the end and the last few to the beginning for seamless looping
