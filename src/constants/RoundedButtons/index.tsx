@@ -11,15 +11,17 @@ interface RoundedButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   hoverColor?: string;
   className?: string;
   disabled?: boolean;
+  type?: string; // Added type property to the interface
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export default function RoundedButton({ 
   children, 
   backgroundColor = "#455CE9",
-  hoverColor = "#1E0634",
+  hoverColor = "#7B3FA9",
   className = "",
   disabled = false,
+  type, // Added type to the destructured props
   onClick,
   ...attributes 
 }: RoundedButtonProps) {
@@ -67,6 +69,7 @@ export default function RoundedButton({
       onClick={handleClick}
       role="button"
       tabIndex={disabled ? -1 : 0}
+      data-type={type} // You can use the type as a data attribute if needed
       {...attributes}
     >
       {children}
@@ -76,5 +79,4 @@ export default function RoundedButton({
         className={styles.circle}
       ></div>
     </div>
-  )
-}
+  )}
