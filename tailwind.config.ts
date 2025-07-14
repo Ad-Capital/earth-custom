@@ -8,6 +8,13 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        playfair: ["Playfair Display", "serif"],
+        dancing: ["Dancing Script", "cursive"],
+        pacifico: ["Pacifico", "cursive"],
+        greatvibes: ["Great Vibes", "cursive"],
+        lobster: ["Lobster", "cursive"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
