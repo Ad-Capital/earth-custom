@@ -121,7 +121,7 @@ const Navbar: React.FC = () => {
           <Link href="/roadmap" className="font-bold nav">Roadmap</Link>
           <NavLink href="#FAQ">FAQs</NavLink>
           <NavLink href="#market">App</NavLink>
-          <Link href="/" className="font-bold nav">Store</Link>
+          <Link href="https://earthinc.bumpa.shop/" className="font-bold nav">Store</Link>
           <Link href="/custom-art" className="font-bold nav">Custom Art</Link>
         </div>
         
@@ -197,7 +197,7 @@ const Navbar: React.FC = () => {
                   App (Coming soon)
                 </MobileNavItem>
                 <Link 
-                  href="/" 
+                  href="https://earthinc.bumpa.shop/" 
                   className="block pb-5 pl-10 font-bold w-full" 
                   onClick={closeMobileMenu}
                   role="menuitem"

@@ -67,7 +67,7 @@ const MobileLayout: React.FC = () => {
   const activeContent = contentData[activeSection];
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-col items-center w-full px-6">
       <div className="flex items-center justify-center w-full pb-8">
         <button onClick={handlePrev} className="border-[2px] rounded-full px-4 py-4 mr-4">
           <FaArrowLeft />

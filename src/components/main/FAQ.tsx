@@ -44,7 +44,7 @@ const FAQ: React.FC = () => {
 
   return (
     <>
-      <section id="FAQ" className="pl-[40px] pr-[40px] pt-[40px] bg-[#F3F3F3] md:pl-[20px] md:pr-[20px]">
+      <section id="FAQ" className="px-4 sm:px-[40px] pt-[40px] bg-[#F3F3F3] md:pl-[20px] md:pr-[20px]">
         <h2 className="text-[36px] pb-[32px] text-[#1E0734] font-medium flex">FAQs</h2>
         {TriviaQuestion.map((trivia: Trivia, index: number) => (
           <div key={trivia.question} className="flex flex-col items-center pl-[40px] pr-[40px] mt-[4px] rounded-[2px] bg-[#EDDBFE] sm:pl-[14px] sm:pr-[14px]">

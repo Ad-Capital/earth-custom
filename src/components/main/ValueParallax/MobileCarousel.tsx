@@ -38,7 +38,7 @@ const MobileCarousel: React.FC<MobileCarouselProps> = ({ className = '' }) => {
 
   return (
     <div className={`w-full max-w-full overflow-hidden ${className}`}>
-      <div className="relative max-w-full px-4">
+      <div className="relative max-w-full ml-4 sm:px-4">
         <Swiper 
           {...swiperConfig} 
           className="mx-auto"

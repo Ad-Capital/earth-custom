@@ -1,55 +1,25 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
-import React, { createContext, useState, useEffect } from "react";
-import Cards from "@/components/main/Cards";
-import Preloader from "@/components/Preloader";
-import Navbar from "@/constants/Navbar";
-import Hero from "@/components/main/Hero";
-import About from "@/components/main/About";
+import React from "react";
+import { usePreloader } from "@/hooks/usePreloader";
+import { useLocomotiveScroll } from "@/hooks/useLocomotiveScroll";
+import HeroSection from "@/components/layout/HeroSection";
+import ContentSection from "@/components/layout/ContentSection";
 import YoutubeVideo from "@/components/main/YoutubeVideo";
-import Explore from "@/components/main/Explore";
-import Values from "@/components/main/Values";
 import Marketplace from "@/components/main/Marketplace";
 import FAQ from "@/components/main/FAQ";
 import NewsletterSection from "@/orderFormSections/Newsletter";
-// import { Hero, YoutubeVideo, About, Explore, Values, Marketplace, FAQ } from "@/sections";
-// import Contact from "@/sections/Contact/Contact";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  const { isLoading, completeLoading } = usePreloader();
+  
+  useLocomotiveScroll(completeLoading);
 
-  useEffect(() => {
-    (async () => {
-      const LocomotiveScroll = (await import("locomotive-scroll")).default;
-      const locomotiveScroll = new LocomotiveScroll();
-
-      setTimeout(() => {
-        setIsLoading(false);
-        document.body.style.cursor = "default";
-        window.scrollTo(0, 0);
-      }, 2000);
-    })();
-  }, []);
   return (
-    <main>
-      {/* <AnimatePresence mode='wait'>
-        {isLoading && <Preloader />}
-      </AnimatePresence> */}
-      <div className="bg-gradient-to-b from-[#7D2AE7] to-[rgba(250,249,255,0)]">
-        <div className="bg-[#F3F3F3]">
-          <Navbar />
-          <Hero />
-        </div>
-        <Cards />
-        <About />
-      </div>
-
+    <main className="w-full overflow-x-hidden">
+      <HeroSection />
       <YoutubeVideo />
-      <div className="Gradient">
-        <Explore />
-        <Values />
-      </div>
+      <ContentSection />
       <Marketplace />
       <FAQ />
       <NewsletterSection />
