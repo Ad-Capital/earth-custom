@@ -23,7 +23,7 @@ const NAV_ITEMS: NavItem[] = [
   // { href: '/pricing', label: 'Pricing' },
   { href: '#faqs', label: 'FAQs' },
   { href: '/contact', label: 'Contact', isExternal: true },
-  { href: '/store', label: 'Store', isExternal: true },
+  { href: 'https://earthinc.bumpa.shop/', label: 'Store', isExternal: true },
 ];
 
 const smoothScroll = (href: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {

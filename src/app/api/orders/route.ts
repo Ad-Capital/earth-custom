@@ -30,6 +30,14 @@ interface OrderRequestBody {
 
 export async function POST(request: NextRequest) {
   try {
+    // Add basic request validation
+    if (!request.body) {
+      return NextResponse.json(
+        { success: false, message: "Request body is required" },
+        { status: 400 }
+      );
+    }
+
     const body = (await request.json()) as OrderRequestBody;
     console.log("Order request received:", body);
 
@@ -37,6 +45,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, message: "Missing required fields" },
         { status: 400 }
+      );
+    }
+
+    // Check for required environment variables
+    if (!process.env.MONGODB_URI) {
+      console.error("MONGODB_URI environment variable is not set");
+      return NextResponse.json(
+        { success: false, message: "Database configuration error" },
+        { status: 500 }
       );
     }
 
@@ -49,8 +66,10 @@ export async function POST(request: NextRequest) {
     const savedOrder = await newOrder.save();
     console.log("Order saved successfully with ID:", savedOrder._id);
 
-    //Send email notification
-    await sendOrderNotification(savedOrder);
+    // Send email notification (don't block the response)
+    sendOrderNotification(savedOrder).catch(error => 
+      console.error("Email notification failed:", error)
+    );
 
     return NextResponse.json({
       success: true,
@@ -59,10 +78,26 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error in orders API:", error);
+    
+    // Provide more specific error messages
+    let errorMessage = "Internal server error";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+      
+      // Check for specific MongoDB connection errors
+      if (error.message.includes("MongoServerError") || 
+          error.message.includes("connection") ||
+          error.message.includes("ENOTFOUND") ||
+          error.message.includes("authentication")) {
+        errorMessage = "Database connection failed";
+      }
+    }
+    
     return NextResponse.json(
       {
         success: false,
-        message: `Failed to process: ${(error as Error).message}`,
+        message: `Failed to process order: ${errorMessage}`,
+        error: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
       },
       { status: 500 }
     );
@@ -74,6 +109,11 @@ async function sendOrderNotification(order: any) {
   const adminEmails = process.env.ADMIN_EMAILS?.split(",") || []; // Get multiple emails from .env
   if (adminEmails.length === 0) {
     console.warn("No admin emails configured.");
+    return;
+  }
+
+  if (!process.env.NEXTAUTH_URL) {
+    console.warn("NEXTAUTH_URL not configured, skipping email notification.");
     return;
   }
 
@@ -92,10 +132,14 @@ async function sendOrderNotification(order: any) {
       }
     );
 
-    if (!response.ok) throw new Error("Failed to send email notification");
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to send email notification: ${response.status} ${errorText}`);
+    }
 
     console.log("Email notification sent successfully.");
   } catch (error) {
     console.error("Error sending email notification:", error);
+    // Don't rethrow - we don't want email failures to break order submission
   }
 }

@@ -1,7 +1,8 @@
 import React from 'react';
 import Link from "next/link";
 import Rounded from "@/constants/RoundedButtons";
-import StylizedText from "./StylizedText"
+import StylizedText from "./StylizedText";
+import ArtModal from "@/components/ArtModal";
 
 const About = () => {
   // About text content - defined once to avoid duplication
@@ -14,6 +15,7 @@ const About = () => {
 
   // Read More functionality for mobile
   const [expanded, setExpanded] = React.useState(false);
+  const [isArtModalOpen, setIsArtModalOpen] = React.useState(false);
   const toggleExpanded = () => setExpanded(!expanded);
 
   return (
@@ -71,11 +73,18 @@ const About = () => {
         </div>
 
         {/* CTA Button */}
-        <Link href="" className="py-20">
-          <Rounded>
-            <p className="font-bold text-white">Join our discord community</p>
-          </Rounded>
-        </Link>
+        <div className="py-20">
+          <button onClick={() => setIsArtModalOpen(true)}>
+            <Rounded>
+              <p className="font-bold text-white">Own an Art Piece</p>
+            </Rounded>
+          </button>
+        </div>
+        
+        <ArtModal 
+          isOpen={isArtModalOpen} 
+          onClose={() => setIsArtModalOpen(false)} 
+        />
       </div>
     </section>
   );

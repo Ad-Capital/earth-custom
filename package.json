@@ -53,6 +53,7 @@
     "swiper": "^11.2.6",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
+    "vercel": "^44.7.3",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

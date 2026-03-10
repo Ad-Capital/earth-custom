@@ -4,6 +4,7 @@ import Rounded from "@/constants/RoundedButtons";
 import { IoMdMenu, IoMdClose } from 'react-icons/io';
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import ArtModal from '@/components/ArtModal';
 
 // Define types for props
 interface NavLinkProps {
@@ -19,6 +20,7 @@ interface MobileNavItemProps extends NavLinkProps {
 const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [isArtModalOpen, setIsArtModalOpen] = useState<boolean>(false);
 
   // Handle effects when mobile menu state changes
   useEffect(() => {
@@ -126,9 +128,11 @@ const Navbar: React.FC = () => {
         </div>
         
         <div className="hidden lg:flex">
-          <Rounded>
-            <p className='text-white font-bold'>Join Community</p>
-          </Rounded>
+          <button onClick={() => setIsArtModalOpen(true)}>
+            <Rounded>
+              <p className='text-white font-bold'>Own an Art Piece</p>
+            </Rounded>
+          </button>
         </div>
         
         {/* Mobile Menu Button */}
@@ -213,14 +217,21 @@ const Navbar: React.FC = () => {
                   Custom Art
                 </Link>
                 <div className='p-4'>
-                  <Rounded>
-                    <p className='font-bold'>Join the discord community</p>
-                  </Rounded>
+                  <button onClick={() => setIsArtModalOpen(true)}>
+                    <Rounded>
+                      <p className='font-bold'>Own an Art Piece</p>
+                    </Rounded>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         )}
+        
+        <ArtModal 
+          isOpen={isArtModalOpen} 
+          onClose={() => setIsArtModalOpen(false)} 
+        />
       </div>
     </nav>
   );

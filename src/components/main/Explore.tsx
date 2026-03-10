@@ -49,7 +49,7 @@ const Explore: FC = () => (
         </div>
       </div>
       
-      <Link href="" className="flex justify-center items-center pt-2 pb-8 sm:pt-4 sm:pb-16 md:pt-0 md:pb-32">
+      <Link href="https://www.instagram.com/earthinc_" className="flex justify-center items-center pt-2 pb-8 sm:pt-4 sm:pb-16 md:pt-0 md:pb-32">
         <Rounded>
           <p className="font-bold text-white text-sm sm:text-base">Join community</p>
         </Rounded>
