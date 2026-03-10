@@ -60,7 +60,11 @@ import {
   Trash2,
   Check,
   Menu,
-  X
+  X,
+  Link,
+  Copy,
+  CheckCheck,
+  DollarSign
 } from 'lucide-react';
 import OrderAnalytics from './OrderAnalytics';
 import * as XLSX from 'xlsx';
@@ -96,6 +100,12 @@ interface Order {
   status: "new" | "in_progress" | "completed" | "cancelled";
   createdAt: string;
   updatedAt: string;
+  quotedPrice?: number;
+  currency?: string;
+  paymentStatus?: "unpaid" | "paid" | "failed";
+  paymentToken?: string;
+  flutterwaveTransactionId?: string;
+  paidAt?: string;
 }
 
 const formatMongooseDate = (dateString: string) => {
@@ -129,6 +139,10 @@ const AdminDashboard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [imageIndex, setImageIndex] = useState<number>(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const [paymentAmount, setPaymentAmount] = useState<string>("");
+  const [generatingLink, setGeneratingLink] = useState<boolean>(false);
+  const [generatedPaymentUrl, setGeneratedPaymentUrl] = useState<string>("");
+  const [linkCopied, setLinkCopied] = useState<boolean>(false);
   const ordersPerPage = 10;
 
   // Fetch orders from the API
@@ -237,6 +251,45 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  const generatePaymentLink = async () => {
+    if (!selectedOrder) return;
+    const amount = parseFloat(paymentAmount);
+    if (!amount || amount <= 0) {
+      alert("Please enter a valid amount.");
+      return;
+    }
+    setGeneratingLink(true);
+    try {
+      const res = await fetch(`/api/admin/orders/${selectedOrder._id}/generate-payment`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to generate link");
+      setGeneratedPaymentUrl(data.paymentUrl);
+      // Reflect new payment state in the order list
+      setOrders(prev =>
+        prev.map(o =>
+          o._id === selectedOrder._id
+            ? { ...o, quotedPrice: amount, paymentStatus: "unpaid", paymentToken: "set" }
+            : o
+        )
+      );
+      setSelectedOrder({ ...selectedOrder, quotedPrice: amount, paymentStatus: "unpaid" });
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to generate payment link");
+    } finally {
+      setGeneratingLink(false);
+    }
+  };
+
+  const copyPaymentLink = () => {
+    navigator.clipboard.writeText(generatedPaymentUrl);
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2000);
+  };
+
   // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -265,6 +318,9 @@ const AdminDashboard: React.FC = () => {
     setSelectedOrder(order);
     setImageIndex(0);
     setIsDetailOpen(true);
+    setPaymentAmount(order.quotedPrice ? String(order.quotedPrice) : "");
+    setGeneratedPaymentUrl("");
+    setLinkCopied(false);
   };
 
   // Image navigation
@@ -938,6 +994,72 @@ const AdminDashboard: React.FC = () => {
                             </CardContent>
                         </Card>
                         )}
+
+                        {/* Payment */}
+                        <Card>
+                            <CardHeader className="pb-2">
+                            <CardTitle className="text-base flex items-center gap-2">
+                                <DollarSign className="w-4 h-4" />
+                                Payment
+                                {selectedOrder.paymentStatus === "paid" ? (
+                                <Badge className="bg-green-500 text-white ml-auto">Paid</Badge>
+                                ) : (
+                                <Badge className="bg-gray-300 text-gray-700 ml-auto">Unpaid</Badge>
+                                )}
+                            </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-3">
+                            {selectedOrder.paymentStatus === "paid" ? (
+                                <div className="text-sm space-y-1 text-gray-700">
+                                <p><span className="text-gray-500">Amount paid:</span> ${selectedOrder.quotedPrice?.toLocaleString()} {selectedOrder.currency ?? "USD"}</p>
+                                {selectedOrder.paidAt && (
+                                    <p><span className="text-gray-500">Paid on:</span> {formatMongooseDate(selectedOrder.paidAt)}</p>
+                                )}
+                                {selectedOrder.flutterwaveTransactionId && (
+                                    <p className="text-xs text-gray-400">Tx: {selectedOrder.flutterwaveTransactionId}</p>
+                                )}
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                <div className="flex gap-2">
+                                    <div className="relative flex-1">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+                                    <Input
+                                        type="number"
+                                        min="1"
+                                        step="0.01"
+                                        placeholder="Enter amount (USD)"
+                                        value={paymentAmount}
+                                        onChange={(e) => setPaymentAmount(e.target.value)}
+                                        className="pl-6"
+                                    />
+                                    </div>
+                                    <Button
+                                    onClick={generatePaymentLink}
+                                    disabled={generatingLink || !paymentAmount}
+                                    className="flex items-center gap-1 whitespace-nowrap"
+                                    >
+                                    <Link className="w-4 h-4" />
+                                    {generatingLink ? "Generating…" : "Generate Link"}
+                                    </Button>
+                                </div>
+
+                                {(generatedPaymentUrl || selectedOrder.paymentToken) && (
+                                    <div className="flex gap-2">
+                                    <Input
+                                        readOnly
+                                        value={generatedPaymentUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/pay/[token]`}
+                                        className="text-xs text-gray-600 bg-gray-50"
+                                    />
+                                    <Button variant="outline" size="icon" onClick={copyPaymentLink}>
+                                        {linkCopied ? <CheckCheck className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                                    </Button>
+                                    </div>
+                                )}
+                                </div>
+                            )}
+                            </CardContent>
+                        </Card>
                     </TabsContent>
                     
                     <TabsContent value="artwork" className="space-y-4 py-4">

@@ -25,6 +25,12 @@ export interface IOrder extends Document {
   newsletter: boolean;
   orderDate: Date;
   status: "new" | "in_progress" | "completed" | "cancelled";
+  quotedPrice?: number;
+  currency: string;
+  paymentStatus: "unpaid" | "paid" | "failed";
+  paymentToken?: string;
+  flutterwaveTransactionId?: string;
+  paidAt?: Date;
 }
 
 // Create the schema
@@ -58,8 +64,18 @@ const OrderSchema: Schema = new Schema(
     status: {
       type: String,
       enum: ["new", "in_progress", "completed", "cancelled"],
-      default: "new", // Automatically set to "new" when order is created
+      default: "new",
     },
+    quotedPrice: { type: Number },
+    currency: { type: String, default: "USD" },
+    paymentStatus: {
+      type: String,
+      enum: ["unpaid", "paid", "failed"],
+      default: "unpaid",
+    },
+    paymentToken: { type: String, unique: true, sparse: true },
+    flutterwaveTransactionId: { type: String },
+    paidAt: { type: Date },
   },
   {
     timestamps: true, // This adds createdAt and updatedAt fields automatically

@@ -1,17 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 import dbConnect from "@/lib/dbConnect";
 import Order from "@/models/Order";
 
-export async function PATCH(req: NextRequest, context: any) {
-  const { id } = context.params;
+const ALLOWED_FIELDS = ["status"] as const;
+type AllowedField = (typeof ALLOWED_FIELDS)[number];
+
+export async function PATCH(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await context.params;
 
   try {
     await dbConnect();
-    const data = await req.json();
+    const body = await req.json();
+
+    // Whitelist | only allow specific fields to be updated via this route
+    const update: Partial<Record<AllowedField, unknown>> = {};
+    for (const field of ALLOWED_FIELDS) {
+      if (field in body) {
+        update[field] = body[field];
+      }
+    }
+
+    if (Object.keys(update).length === 0) {
+      return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
+    }
 
     const order = await Order.findByIdAndUpdate(
       id,
-      { $set: data },
+      { $set: update },
       { new: true }
     );
 
