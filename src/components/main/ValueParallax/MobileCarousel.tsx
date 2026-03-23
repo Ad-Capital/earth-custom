@@ -45,17 +45,17 @@ const MobileCarousel: React.FC<MobileCarouselProps> = ({ className = '' }) => {
         >
           <SwiperSlide>
             <div className="h-[458px] max-w-full bg-transparent flex justify-center items-center">
-              <img className="h-full w-auto max-h-full object-contain" src="artCard1.svg" alt="Art Card 1" />
+              <img className="h-full w-auto max-h-full object-contain" src="artCard1.webp" alt="Art Card 1" loading="lazy" />
             </div>
           </SwiperSlide>
           <SwiperSlide>
             <div className="h-[458px] max-w-full bg-transparent flex justify-center items-center">
-              <img className="h-full w-auto max-h-full object-contain rounded-md" src="artCard2.svg" alt="Art Card 2" />
+              <img className="h-full w-auto max-h-full object-contain rounded-md" src="artCard2.webp" alt="Art Card 2" loading="lazy" />
             </div>
           </SwiperSlide>
           <SwiperSlide>
             <div className="h-[458px] max-w-full bg-transparent flex justify-center items-center">
-              <img className="h-full w-auto max-h-full object-contain" src="artCard3.svg" alt="Art Card 3" />
+              <img className="h-full w-auto max-h-full object-contain" src="artCard3.webp" alt="Art Card 3" loading="lazy" />
             </div>
           </SwiperSlide>
         </Swiper>

@@ -21,6 +21,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preload" as="image" href="/canyon.webp" />
+        <link rel="preload" as="image" href="/farmersMarket.webp" />
+        <link rel="preload" as="image" href="/tower.webp" />
+      </head>
       <body className={`${poppins.variable} antialiased`}>
         <AuthProvider>{children}</AuthProvider>
       </body>

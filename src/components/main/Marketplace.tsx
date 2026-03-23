@@ -22,7 +22,7 @@ const Marketplace = () => {
         </div>
 
         <div className="flex justify-center w-full md:justify-end md:w-fit md:ml-0 md:mt-[120px] lg:ml-0">
-          <img src="/phones.svg" alt="phones" className='max-w-full h-auto' />
+          <img src="/phones.webp" alt="phones" className='max-w-full h-auto' loading="lazy" />
         </div>
       </div>
     </div>
