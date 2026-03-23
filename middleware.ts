@@ -40,27 +40,32 @@ export async function middleware(req: NextRequest) {
   }
 
   if (limiter) {
-    const { success, limit, remaining, reset } = await limiter.limit(ip);
+    try {
+      const { success, limit, remaining, reset } = await limiter.limit(ip);
 
-    if (!success) {
-      return NextResponse.json(
-        { error: "Too many requests. Please try again later." },
-        {
-          status: 429,
-          headers: {
-            "X-RateLimit-Limit": String(limit),
-            "X-RateLimit-Remaining": "0",
-            "X-RateLimit-Reset": String(reset),
-            "Retry-After": String(Math.ceil((reset - Date.now()) / 1000)),
-          },
-        }
-      );
+      if (!success) {
+        return NextResponse.json(
+          { error: "Too many requests. Please try again later." },
+          {
+            status: 429,
+            headers: {
+              "X-RateLimit-Limit": String(limit),
+              "X-RateLimit-Remaining": "0",
+              "X-RateLimit-Reset": String(reset),
+              "Retry-After": String(Math.ceil((reset - Date.now()) / 1000)),
+            },
+          }
+        );
+      }
+
+      const res = NextResponse.next();
+      res.headers.set("X-RateLimit-Limit", String(limit));
+      res.headers.set("X-RateLimit-Remaining", String(remaining));
+      return res;
+    } catch {
+      // Redis unavailable - fail open so auth is never blocked by infra issues
+      return NextResponse.next();
     }
-
-    const res = NextResponse.next();
-    res.headers.set("X-RateLimit-Limit", String(limit));
-    res.headers.set("X-RateLimit-Remaining", String(remaining));
-    return res;
   }
 
   return NextResponse.next();
